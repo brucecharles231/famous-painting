@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>世界名画典藏馆 - 苹果极简×侘寂风</title>
+  <style>
+    /* 全局极简+侘寂核心样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "SF Pro Text", "PingFang SC", "思源宋体", "宋体", sans-serif;
+    }
+    body {
+      background-color: #F8F5F2;
+      color: #3D352F;
+      line-height: 1.8;
+      font-size: 16px;
+      padding-top: 80px;
+    }
+    a {
+      text-decoration: none;
+      color: #3D352F;
+      transition: all 0.3s ease;
+    }
+    a:hover {
+      color: #201E1C;
+      border-bottom: 1px solid #3D352F;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 0;
+    }
+    /* 固定导航栏 */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #F8F5F2;
+      border-bottom: 1px solid #E5E1DE;
+      padding: 15px 5%;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    .nav-list {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-list a.active {
+      border-bottom: 1px solid #3D352F;
+    }
+    .search {
+      border: none;
+      border-bottom: 1px solid #E5E1DE;
+      background: transparent;
+      padding: 5px 10px;
+      outline: none;
+      color: #3D352F;
+      width: 200px;
+    }
+    .search::placeholder {
+      color: #999;
+    }
+    /* 流派标题区 */
+    .genre-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: 2px;
+    }
+    .genre-desc {
+      text-align: center;
+      color: #666;
+      max-width: 800px;
+      margin: 0 auto 80px;
+      font-size: 15px;
+    }
+    /* 名画卡片列表 */
+    .painting-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 40px;
+      margin-bottom: 100px;
+    }
+    .painting-card {
+      background: transparent;
+      border: none;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .painting-card:hover {
+      transform: translateY(-5px);
+    }
+    .painting-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      border-radius: 2px;
+      margin-bottom: 15px;
+      border: 1px solid #E5E1DE;
+    }
+    .painting-name {
+      font-size: 18px;
+      margin-bottom: 5px;
+      font-weight: 400;
+    }
+    .painting-author {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .painting-museum {
+      font-size: 13px;
+      color: #999;
+    }
+    /* 名画详情区 */
+    .painting-detail {
+      max-width: 1000px;
+      margin: 0 auto 120px;
+    }
+    .detail-img {
+      width: 100%;
+      height: auto;
+      border-radius: 2px;
+      border: 1px solid #E5E1DE;
+      margin-bottom: 40px;
+      cursor: pointer;
+    }
+    .detail-info {
+      margin-bottom: 40px;
+      padding-left: 20px;
+      border-left: 1px solid #E5E1DE;
+    }
+    .detail-info p {
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .detail-info p span {
+      color: #666;
+    }
+    .detail-interpret {
+      background-color: #E5E1DE;
+      padding: 40px;
+      border-radius: 2px;
+      margin-bottom: 60px;
+    }
+    .detail-subtitle {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+    .detail-interpret p {
+      margin-bottom: 15px;
+      font-size: 15px;
+      text-align: justify;
+    }
+    /* 画家介绍区 */
+    .painter-info {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      padding: 20px;
+      border: 1px solid #E5E1DE;
+      border-radius: 2px;
+    }
+    .painter-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #F8F5F2;
+      box-shadow: 0 0 0 1px #E5E1DE;
+    }
+    .painter-text {
+      flex: 1;
+      min-width: 300px;
+    }
+    .painter-text h3 {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+    .painter-text p {
+      margin-bottom: 10px;
+      font-size: 15px;
+      text-align: justify;
+    }
+    .painter-text p strong {
+      font-weight: 500;
+      color: #201E1C;
+    }
+    /* 回到顶部按钮 */
+    .back-to-top {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background-color: #E5E1DE;
+      color: #3D352F;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      transition: all 0.3s ease;
+      font-size: 18px;
+      z-index: 998;
+    }
+    .back-to-top:hover {
+      background-color: #3D352F;
+      color: #F8F5F2;
+    }
+    /* 页脚 */
+    .footer {
+      border-top: 1px solid #E5E1DE;
+      padding: 40px 5%;
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+    }
+    /* 新增功能：多维度筛选栏 */
+    .filter-bar {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 20px;
+      border: 1px solid #E5E1DE;
+      border-radius: 2px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      background-color: #F8F5F2;
+    }
+    .filter-title {
+      font-size: 14px;
+      color: #666;
+      white-space: nowrap;
+    }
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .filter-btn {
+      padding: 5px 15px;
+      border: 1px solid #E5E1DE;
+      border-radius: 20px;
+      background: transparent;
+      color: #3D352F;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background-color: #3D352F;
+      color: #F8F5F2;
+      border-color: #3D352F;
+    }
+    /* 新增功能：画家字母索引侧边栏 */
+    .painter-index {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      z-index: 997;
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+      border: 1px solid #E5E1DE;
+      border-radius: 20px;
+      background-color: #F8F5F2;
+    }
+    .painter-index.show {
+      display: flex;
+    }
+    .index-letter {
+      width: 25px;
+      height: 25px;
+      line-height: 25px;
+      text-align: center;
+      font-size: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .index-letter:hover {
+      background-color: #3D352F;
+      color: #F8F5F2;
+    }
+    /* 新增功能：高清图查看器弹窗 */
+    .painting-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(32, 30, 28, 0.95);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .painting-modal.show {
+      display: flex;
+    }
+    .modal-close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      font-size: 24px;
+      color: #F8F5F2;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-img {
+      max-width: 90%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+    .modal-control {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .modal-btn {
+      padding: 8px 20px;
+      border: 1px solid #F8F5F2;
+      border-radius: 2px;
+      background: transparent;
+      color: #F8F5F2;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .modal-btn:hover {
+      background-color: #F8F5F2;
+      color: #201E1C;
+    }
+    /* 响应式适配（苹果设备优先） */
+    @media (max-width: 768px) {
+      .nav-list {
+        gap: 15px;
+      }
+      .search {
+        width: 150px;
+      }
+      .genre-title {
+        font-size: 28px;
+      }
+      .painting-list {
+        gap: 20px;
+      }
+      .painting-img {
+        height: 300px;
+      }
+      .detail-interpret {
+        padding: 20px;
+      }
+      .painter-info {
+        gap: 20px;
+        justify-content: center;
+        text-align: center;
+      }
+      .back-to-top {
+        bottom: 20px;
+        right: 20px;
+      }
+      .filter-bar {
+        gap: 15px;
+        padding: 15px;
+      }
+      .painter-index {
+        right: 10px;
+        padding: 5px;
+      }
+      .index-letter {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+      }
+      .modal-close {
+        top: 20px;
+        right: 20px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+      }
+    }
+    @media (max-width: 480px) {
+      .nav {
+        flex-direction: column;
+        padding: 10px 5%;
+      }
+      .painting-img {
+        height: 250px;
+      }
+      .filter-title {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="nav">
+    <div class="logo">名画典藏馆</div>
+    <div class="nav-list">
+      <a href="#renaissance" class="active">文艺复兴</a>
+      <a href="#baroque">巴洛克</a>
+      <a href="#rococo">洛可可</a>
+      <a href="#neoclassicism">新古典主义</a>
+      <a href="#realism">现实主义</a>
+      <a href="#impressionism">印象派</a>
+      <a href="#neoimpressionism">新印象派</a>
+      <a href="#post-impressionism">后印象派</a>
+      <a href="#fauvism">野兽派</a>
+      <a href="#cubism">立体主义</a>
+      <a href="#expressionism">表现主义</a>
+      <a href="#surrealism">超现实主义</a>
+      <a href="#museum">馆藏博物馆</a>
+    </div>
+    <input type="text" class="search" placeholder="搜索名画/画家/博物馆">
+  </nav>
+
+  <!-- 主内容区 -->
+  <main class="container">
+    <!-- 多维度筛选栏 -->
+    <div class="filter-bar">
+      <div class="filter-title">按流派筛选：</div>
+      <div class="filter-group" id="genreFilter">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="renaissance">文艺复兴</button>
+        <button class="filter-btn" data-filter="baroque">巴洛克</button>
+        <button class="filter-btn" data-filter="rococo">洛可可</button>
+        <button class="filter-btn" data-filter="neoclassicism">新古典主义</button>
+        <button class="filter-btn" data-filter="realism">现实主义</button>
+        <button class="filter-btn" data-filter="impressionism">印象派</button>
+        <button class="filter-btn" data-filter="neoimpressionism">新印象派</button>
+        <button class="filter-btn" data-filter="post-impressionism">后印象派</button>
+        <button class="filter-btn" data-filter="fauvism">野兽派</button>
+        <button class="filter-btn" data-filter="cubism">立体主义</button>
+        <button class="filter-btn" data-filter="expressionism">表现主义</button>
+        <button class="filter-btn" data-filter="surrealism">超现实主义</button>
+      </div>
+      <div class="filter-title">按博物馆筛选：</div>
+      <div class="filter-group" id="museumFilter">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="卢浮宫">卢浮宫</button>
+        <button class="filter-btn" data-filter="奥赛博物馆">奥赛博物馆</button>
+        <button class="filter-btn" data-filter="大都会">大都会</button>
+        <button class="filter-btn" data-filter="现代艺术博物馆">现代艺术博物馆</button>
+        <button class="filter-btn" data-filter="阿姆斯特丹国家博物馆">阿姆斯特丹国家博物馆</button>
+      </div>
+    </div>
+
+    <!-- 画家字母索引侧边栏 -->
+    <div class="painter-index" id="painterIndex">
+      <span class="index-letter" data-letter="A">A</span>
+      <span class="index-letter" data-letter="B">B</span>
+      <span class="index-letter" data-letter="D">D</span>
+      <span class="index-letter" data-letter="F">F</span>
+      <span class="index-letter" data-letter="H">H</span>
+      <span class="index-letter" data-letter="L">L</span>
+      <span class="index-letter" data-letter="M">M</span>
+      <span class="index-letter" data-letter="P">P</span>
+      <span class="index-letter" data-letter="S">S</span>
+      <span class="index-letter" data-letter="W">W</span>
+    </div>
+
+    <!-- 高清图查看器弹窗 -->
+    <div class="painting-modal" id="paintingModal">
+      <button class="modal-close" id="modalClose">×</button>
+      <img src="" alt="高清名画" class="modal-img" id="modalImg">
+      <div class="modal-control">
+        <button class="modal-btn" id="modalZoomIn">放大</button>
+        <button class="modal-btn" id="modalZoomOut">缩小</button>
+      </div>
+    </div>
+
+    <!-- 1. 文艺复兴流派 -->
+    <section id="renaissance">
+      <h2 class="genre-title">文艺复兴</h2>
+      <p class="genre-desc">14-16世纪发源于意大利的艺术革命，以人文主义为核心，融合写实主义、线性透视法与解剖学，打破中世纪宗教艺术的刻板，重新唤醒对人性与自然的关注，是西方艺术史的黄金时代。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/monalisa/600/800" alt="蒙娜丽莎" class="painting-img">
+          <p class="painting-name">蒙娜丽莎</p>
+          <p class="painting-author">列奥纳多·达·芬奇</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/lastsupper/600/800" alt="最后的晚餐" class="painting-img">
+          <p class="painting-name">最后的晚餐</p>
+          <p class="painting-author">列奥纳多·达·芬奇</p>
+          <p class="painting-museum">意大利 · 圣玛利亚感恩教堂</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/creation/600/800" alt="创造亚当" class="painting-img">
+          <p class="painting-name">创造亚当</p>
+          <p class="painting-author">米开朗基罗</p>
+          <p class="painting-museum">梵蒂冈 · 梵蒂冈博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/monalisa/1200/1600" alt="蒙娜丽莎" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/monalisa/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>蒙娜丽莎（Mona Lisa）</span></p>
+          <p>画家：<span>列奥纳多·达·芬奇（Leonardo da Vinci）</span></p>
+          <p>创作年份：<span>1503-1519年</span></p>
+          <p>材质：<span>杨木画板油画</span></p>
+          <p>尺寸：<span>77×53cm</span></p>
+          <p>现存馆藏：<span>法国巴黎卢浮宫博物馆 · 德农馆一层</span></p>
+          <p>艺术地位：<span>文艺复兴盛期代表作，西方艺术史上「最著名的油画」</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《蒙娜丽莎》是达·芬奇晚年的巅峰之作，以「渐隐法」绘制人物面部，让蒙娜丽莎的微笑呈现「视角度变而微笑变」的神奇效果，打破了传统肖像画的刻板僵硬。画面运用精准的线性透视法，将人物与背景的山水融合，背景的左右地平线一高一低，营造出朦胧的空间感，体现了文艺复兴的「人文主义」核心——将人置于自然中心。</p>
+          <p>画中人物的手部刻画细腻写实，贴合人物的姿态与情绪，达·芬奇将解剖学研究成果融入绘画，让人物的骨骼、肌肉线条自然逼真；色彩上以低饱和的暖棕调为主，契合侘寂风的质朴质感，也让作品历经500余年仍具独特的视觉魅力。</p>
+        </div>
+        <div class="painter-info" data-painter="列奥纳多·达·芬奇">
+          <img src="https://picsum.photos/seed/leonardo/300/300" alt="列奥纳多·达·芬奇" class="painter-img">
+          <div class="painter-text">
+            <h3>列奥纳多·达·芬奇（1452-1519）</h3>
+            <p>意大利文艺复兴时期「全才」，既是画家、雕塑家，也是发明家、解剖学家、天文学家，被称为「文艺复兴最完美的代表」。</p>
+            <p>艺术风格：融合写实主义与科学研究，擅长「渐隐法」「空气透视法」，作品兼具精准的科学细节与浓郁的人文情感，打破了中世纪艺术的宗教束缚。</p>
+            <p><strong>历史地位</strong>：西方艺术史上第一个将科学与艺术完美融合的画家，其创作理念影响了拉斐尔、米开朗基罗等文艺复兴巨匠，为后世写实主义绘画奠定了基础；《蒙娜丽莎》《最后的晚餐》成为西方艺术的符号性作品。</p>
+            <p><strong>代表作品</strong>：《蒙娜丽莎》《最后的晚餐》《岩间圣母》《维特鲁威人》</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 巴洛克艺术流派 -->
+    <section id="baroque">
+      <h2 class="genre-title">巴洛克艺术</h2>
+      <p class="genre-desc">17-18世纪初诞生于意大利，后风靡欧洲，以<strong>戏剧化动态、强烈明暗对比、华丽繁复构图</strong>为核心，融合宗教激情与宫廷奢华，注重画面的视觉冲击力与情感张力，是古典艺术向现代艺术过渡的重要流派。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/nightwatch/600/800" alt="夜巡" class="painting-img">
+          <p class="painting-name">夜巡</p>
+          <p class="painting-author">伦勃朗·哈尔曼松·凡·莱因</p>
+          <p class="painting-museum">荷兰 · 阿姆斯特丹国家博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/ecstasy/600/800" alt="圣特雷莎的狂喜" class="painting-img">
+          <p class="painting-name">圣特雷莎的狂喜</p>
+          <p class="painting-author">乔瓦尼·洛伦佐·贝尼尼</p>
+          <p class="painting-museum">意大利 · 罗马胜利圣母教堂</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/majesty/600/800" alt="国王的盛宴" class="painting-img">
+          <p class="painting-name">路易十四肖像</p>
+          <p class="painting-author">亚森特·里戈</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/nightwatch/1200/1600" alt="夜巡" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/nightwatch/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>夜巡（The Night Watch）</span></p>
+          <p>画家：<span>伦勃朗·哈尔曼松·凡·莱因（Rembrandt Harmenszoon van Rijn）</span></p>
+          <p>创作年份：<span>1642年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>363×437cm</span></p>
+          <p>现存馆藏：<span>荷兰阿姆斯特丹国家博物馆 · 荣誉展厅</span></p>
+          <p>艺术地位：<span>巴洛克绘画的巅峰之作，荷兰黄金时代最具代表性的作品</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《夜巡》是伦勃朗的代表作，描绘了阿姆斯特丹民兵队的出巡场景，打破了传统群像画「平均排布人物」的刻板模式，以**动态的构图、强烈的明暗对比（伦勃朗光）** 营造出戏剧化的视觉效果。画面以队长班宁·科克为核心，人物错落排布，有的举旗、有的装弹、有的挥手，形成富有层次的动态画面，背景的暗调与人物的亮调形成强烈反差，突出主体的同时让画面充满空间感。</p>
+          <p>作品并非描绘「夜晚」，而是因年代久远画面产生氧化变黑，后被误命名为《夜巡》；伦勃朗在作品中融入了平民的生活气息，摒弃了宫廷肖像画的奢华，将民兵队的真实状态展现得淋漓尽致，其「光影塑造人物」的技法成为巴洛克绘画的核心技法，影响了后世无数画家。画面中细节丰富，每个人物的神态、动作都各具特色，体现了伦勃朗对人物心理的精准捕捉。</p>
+        </div>
+        <div class="painter-info" data-painter="伦勃朗·哈尔曼松·凡·莱因">
+          <img src="https://picsum.photos/seed/rembrandt/300/300" alt="伦勃朗" class="painter-img">
+          <div class="painter-text">
+            <h3>伦勃朗·哈尔曼松·凡·莱因（1606-1669）</h3>
+            <p>荷兰黄金时代最伟大的画家、版画家，巴洛克艺术的核心代表，以**伦勃朗光（明暗对比法）** 著称，作品涵盖肖像画、历史画、风景画、静物画，兼具写实性与情感性。</p>
+            <p>艺术风格：独创「伦勃朗光」，以单一光源营造强烈的明暗对比，突出人物主体；擅长捕捉人物的内心情绪，肖像画兼具写实与传神；构图富有动态与层次，打破传统绘画的刻板布局。</p>
+            <p><strong>历史地位</strong>：荷兰绘画史上的巅峰人物，巴洛克绘画的重要代表，其明暗对比技法成为西方绘画的核心技法之一；作品将平民题材提升到艺术高度，体现了人文主义思想，对后世现实主义、印象派等流派均有深远影响。</p>
+            <p><strong>代表作品</strong>：《夜巡》《杜普教授的解剖课》《自画像》系列《浪子回头》</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 洛可可艺术流派 -->
+    <section id="rococo">
+      <h2 class="genre-title">洛可可艺术</h2>
+      <p class="genre-desc">18世纪诞生于法国的宫廷艺术，是对巴洛克繁复厚重的反叛，以<strong>轻盈柔美、精致细腻、曲线构图、世俗享乐</strong>为核心，主打粉蓝、粉黄等柔和色调，题材多为贵族的闲适生活、情爱与田园，充满浪漫与慵懒的氛围，是古典艺术中最具柔美气质的流派。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/swing/600/800" alt="秋千" class="painting-img">
+          <p class="painting-name">秋千</p>
+          <p class="painting-author">让-奥诺雷·弗拉戈纳尔</p>
+          <p class="painting-museum">英国 · 华莱士收藏馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/love/600/800" alt="爱之泉" class="painting-img">
+          <p class="painting-name">爱之泉</p>
+          <p class="painting-author">弗朗索瓦·布歇</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/breakfast/600/800" alt="狄德罗的早餐" class="painting-img">
+          <p class="painting-name">沐浴的狄安娜</p>
+          <p class="painting-author">弗朗索瓦·布歇</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/swing/1200/1600" alt="秋千" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/swing/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>秋千（The Swing）</span></p>
+          <p>画家：<span>让-奥诺雷·弗拉戈纳尔（Jean-Honoré Fragonard）</span></p>
+          <p>创作年份：<span>1767年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>81×64cm</span></p>
+          <p>现存馆藏：<span>英国伦敦华莱士收藏馆 · 洛可可艺术展厅</span></p>
+          <p>艺术地位：<span>洛可可艺术的巅峰之作，法国宫廷享乐文化的经典视觉表达</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《秋千》是弗拉戈纳尔的代表作，也是洛可可艺术的标志性作品，描绘了贵族少女在花园荡秋千的浪漫场景，完美诠释了洛可可的**柔美、精致与浪漫**。画面以曲线为核心构图：少女的裙摆、秋千的绳索、树枝的藤蔓相互交织，形成轻盈的动态感；色调以粉黄、嫩绿、浅蓝为主，柔和清新，营造出慵懒的田园氛围；细节刻画极致细腻，少女的发丝、裙摆的褶皱、花园的花草栩栩如生，尽显洛可可的精致美学。</p>
+          <p>作品暗藏浪漫的巧思：少女故意踢落鞋子，让藏在花丛中的爱慕者拾取，画面充满暧昧的情爱氛围，精准捕捉了法国贵族的闲适享乐与浪漫情愫。弗拉戈纳尔摒弃了巴洛克的宗教与宫廷厚重感，将视角转向贵族的日常休闲，以细腻的笔触和柔和的色彩，让画面充满诗意与浪漫，成为洛可可艺术「世俗享乐」主题的经典范本。</p>
+        </div>
+        <div class="painter-info" data-painter="让-奥诺雷·弗拉戈纳尔">
+          <img src="https://picsum.photos/seed/fragonard/300/300" alt="弗拉戈纳尔" class="painter-img">
+          <div class="painter-text">
+            <h3>让-奥诺雷·弗拉戈纳尔（1732-1806）</h3>
+            <p>法国洛可可艺术的核心代表画家，布歇的弟子，擅长描绘贵族的浪漫情爱与田园生活，作品以轻盈的动态、细腻的笔触、柔和的色调著称，是洛可可艺术中最具浪漫气息的画家。</p>
+            <p>艺术风格：以曲线构图营造轻盈动态；主打粉黄、嫩绿、浅蓝等低饱和柔色调；细节刻画极致精致，擅长表现丝绸、肌肤的质感；题材多为贵族情爱、田园休闲，充满浪漫与暧昧的氛围。</p>
+            <p><strong>历史地位</strong>：洛可可艺术的集大成者，将洛可可的「柔美精致」与「世俗浪漫」推到极致，其作品成为18世纪法国宫廷文化的视觉符号；虽因新古典主义兴起被批判为「奢靡浮华」，但仍为古典艺术留下了极具美感的创作范式，影响了后世的浪漫主义绘画。</p>
+            <p><strong>代表作品</strong>：《秋千》《偷吻》《读书的少女》《荷拉斯兄弟之誓（草图）》</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 新古典主义流派 -->
+    <section id="neoclassicism">
+      <h2 class="genre-title">新古典主义</h2>
+      <p class="genre-desc">18世纪末-19世纪初兴起于法国，是对洛可可奢华风格的反叛，主张**回归古希腊罗马的古典美学**，以简洁的构图、理性的色彩、写实的造型、历史/英雄题材为核心，强调艺术的道德教化作用，成为法国大革命时期的主流艺术。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/horatii/600/800" alt="荷拉斯兄弟之誓" class="painting-img">
+          <p class="painting-name">荷拉斯兄弟之誓</p>
+          <p class="painting-author">雅克-路易·大卫</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/marat/600/800" alt="马拉之死" class="painting-img">
+          <p class="painting-name">马拉之死</p>
+          <p class="painting-author">雅克-路易·大卫</p>
+          <p class="painting-museum">比利时 · 布鲁塞尔皇家美术博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/venus/600/800" alt="维纳斯的诞生" class="painting-img">
+          <p class="painting-name">泉</p>
+          <p class="painting-author">让-奥古斯特-多米尼克·安格尔</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/horatii/1200/1600" alt="荷拉斯兄弟之誓" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/horatii/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>荷拉斯兄弟之誓（The Oath of the Horatii）</span></p>
+          <p>画家：<span>雅克-路易·大卫（Jacques-Louis David）</span></p>
+          <p>创作年份：<span>1784年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>330×425cm</span></p>
+          <p>现存馆藏：<span>法国巴黎卢浮宫博物馆 · 新古典主义展厅</span></p>
+          <p>艺术地位：<span>新古典主义的开山之作，法国大革命的艺术宣言</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《荷拉斯兄弟之誓》是新古典主义的标志性作品，取材于古罗马历史故事：荷拉斯三兄弟宣誓为国家战死，父亲为他们献上武器，而画面右侧的女性则因与敌方联姻陷入悲伤。作品以**严格的对称构图、简洁的几何造型、强烈的色彩对比** 展现古典美学，画面被分为三个部分：左侧的男性（理性、勇气、国家）、中间的父亲（权威、责任）、右侧的女性（感性、悲伤、个人），形成「国家与个人」「理性与感性」的强烈对比，契合新古典主义的道德教化内核。</p>
+          <p>大卫摒弃了洛可可的柔美曲线与华丽色彩，采用直线条、硬朗的造型、低饱和的红、白、黑主色调，画面简洁而庄重，人物的肌肉、姿态精准写实，还原了古希腊罗马雕塑的质感。作品成为法国大革命的精神象征，宣扬了爱国、牺牲、理性的精神，也奠定了新古典主义「艺术为社会服务」的创作理念，其构图与造型技法成为新古典主义的创作范本。</p>
+        </div>
+        <div class="painter-info" data-painter="雅克-路易·大卫">
+          <img src="https://picsum.photos/seed/david/300/300" alt="雅克-路易·大卫" class="painter-img">
+          <div class="painter-text">
+            <h3>雅克-路易·大卫（1748-1825）</h3>
+            <p>法国新古典主义画派的创始人，法国大革命时期的官方画家，作品兼具古典美学与政治内涵，是新古典主义艺术的核心代表，也是西方艺术史中「艺术为政治服务」的典型艺术家。</p>
+            <p>艺术风格：严格遵循古希腊罗马的古典美学，采用对称构图、直线条、写实造型；色彩简洁庄重，以红、白、黑、金为主；题材多为历史、英雄、政治事件，强调艺术的道德教化与政治宣传作用。</p>
+            <p><strong>历史地位</strong>：新古典主义的开山鼻祖，颠覆了洛可可的奢华艺术风格，重新确立了古典美学在西方艺术中的地位；其作品成为法国大革命与拿破仑帝国的艺术象征，影响了安格尔等后世新古典主义画家，也为现实主义艺术奠定了基础。</p>
+            <p><strong>代表作品</strong>：《荷拉斯兄弟之誓》《马拉之死》《拿破仑加冕礼》《苏格拉底之死》</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 现实主义流派 -->
+    <section id="realism">
+      <h2 class="genre-title">现实主义</h2>
+      <p class="genre-desc">19世纪中期诞生于法国，是对浪漫主义主观抒情的反叛，主张**客观、真实地描绘社会现实**，摒弃贵族、宗教、历史题材，将视角转向平民、工人、农民的日常生活，直面社会的贫富差距与底层疾苦，强调艺术的「真实性」与「社会性」，是西方艺术史中极具现实意义的流派。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/reapers/600/800" alt="拾穗者" class="painting-img">
+          <p class="painting-name">拾穗者</p>
+          <p class="painting-author">让-弗朗索瓦·米勒</p>
+          <p class="painting-museum">法国 · 奥赛博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/stone/600/800" alt="石工" class="painting-img">
+          <p class="painting-name">石工</p>
+          <p class="painting-author">古斯塔夫·库尔贝</p>
+          <p class="painting-museum">法国 · 里尔美术宫</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/olive/600/800" alt="橄榄树" class="painting-img">
+          <p class="painting-name">晚钟</p>
+          <p class="painting-author">让-弗朗索瓦·米勒</p>
+          <p class="painting-museum">法国 · 奥赛博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/reapers/1200/1600" alt="拾穗者" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/reapers/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>拾穗者（The Gleaners）</span></p>
+          <p>画家：<span>让-弗朗索瓦·米勒（Jean-François Millet）</span></p>
+          <p>创作年份：<span>1857年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>83.5×110cm</span></p>
+          <p>现存馆藏：<span>法国巴黎奥赛博物馆 · 现实主义展厅</span></p>
+          <p>艺术地位：<span>现实主义的经典之作，底层农民生活的真实视觉写照</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《拾穗者》是米勒的代表作，描绘了法国乡村秋收后，三位农妇在麦田里拾取散落麦穗的场景，是现实主义「**真实描绘底层生活**」的核心体现。画面摒弃了浪漫主义的唯美修饰，以朴实的色调、厚重的笔触、简洁的构图，还原了农民的真实劳作状态：三位农妇弯腰躬身，动作笨拙而坚定，衣衫破旧，面部被阴影遮挡，没有刻意的情绪表达，却尽显底层劳动者的艰辛与坚韧；背景中金黄的麦田、远处的收割机与监工，形成「丰收的喜悦与底层的贫苦」的强烈对比，直击社会的贫富差距。</p>
+          <p>米勒一生扎根乡村，以农民为核心创作题材，他没有对农民的生活进行悲情化渲染，而是以客观、平静的视角描绘他们的劳作与日常，让平凡的底层生活拥有了艺术的尊严。《拾穗者》的色调以土黄、棕褐为主，契合侘寂风的质朴质感，笔触厚重而粗犷，还原了土地与麦田的真实肌理，让作品充满了浓郁的乡村生活气息，也成为现实主义艺术「为平民立像」的经典范本。</p>
+        </div>
+        <div class="painter-info" data-painter="让-弗朗索瓦·米勒">
+          <img src="https://picsum.photos/seed/millet/300/300" alt="米勒" class="painter-img">
+          <div class="painter-text">
+            <h3>让-弗朗索瓦·米勒（1814-1875）</h3>
+            <p>法国现实主义绘画的核心代表，被称为「农民画家」，一生扎根法国巴比松乡村，以农民的劳作、生活为唯一创作题材，作品朴实、厚重、充满人文关怀，是现实主义艺术中最具温度的画家。</p>
+            <p>艺术风格：以土黄、棕褐等朴实的大地色调为主；笔触厚重粗犷，还原乡村与土地的真实肌理；构图简洁，人物造型朴实无华；以客观平静的视角描绘农民生活，不煽情、不美化，尽显真实与坚韧。</p>
+            <p><strong>历史地位</strong>：现实主义艺术的重要奠基人，首次将农民题材提升到主流艺术高度，让底层劳动者成为艺术的主角；其作品充满人文关怀，影响了后来的巴比松画派、印象派（如莫奈）以及俄国现实主义绘画；为西方艺术史开辟了「平民艺术」的新路径。</p>
+            <p><strong>代表作品</strong>：《拾穗者》《晚钟》《牧羊女与群羊》《播种者》</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 印象派流派 -->
+    <section id="impressionism">
+      <h2 class="genre-title">印象派</h2>
+      <p class="genre-desc">19世纪60年代诞生于法国，摒弃学院派的画室创作与刻板写实，主张「走出户外，捕捉光影瞬间」，以快速、松散的笔触还原自然的真实色彩，强调视觉印象而非细节刻画，是西方艺术从古典走向现代的转折点。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/sunrise/600/800" alt="日出·印象" class="painting-img">
+          <p class="painting-name">日出·印象</p>
+          <p class="painting-author">克劳德·莫奈</p>
+          <p class="painting-museum">法国 · 玛摩丹美术馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/waterlily/600/800" alt="睡莲" class="painting-img">
+          <p class="painting-name">睡莲（系列）</p>
+          <p class="painting-author">克劳德·莫奈</p>
+          <p class="painting-museum">法国 · 奥赛博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/ballet/600/800" alt="舞蹈课" class="painting-img">
+          <p class="painting-name">舞蹈课</p>
+          <p class="painting-author">埃德加·德加</p>
+          <p class="painting-museum">法国 · 奥赛博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/sunrise/1200/1600" alt="日出·印象" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/sunrise/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>日出·印象（Impression, Sunrise）</span></p>
+          <p>画家：<span>克劳德·莫奈（Claude Monet）</span></p>
+          <p>创作年份：<span>1872年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>48×63cm</span></p>
+          <p>现存馆藏：<span>法国巴黎玛摩丹美术馆 · 印象派展厅</span></p>
+          <p>艺术地位：<span>印象派名称的由来，印象派艺术的开山之作</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《日出·印象》是莫奈29岁的作品，描绘了法国勒阿弗尔港口的日出瞬间，画面没有精细的轮廓线，仅以松散的笔触、朦胧的色彩捕捉光影的变化——橙红色的太阳在水面投下模糊的光斑，水面的波纹以短促的蓝、白、黄笔触勾勒，远处的船只、建筑仅为模糊的色块，完全打破了学院派「写实刻画细节」的创作准则。</p>
+          <p>这幅作品在1874年印象派首次画展中展出，被评论家嘲讽为「印象派的涂鸦」，却意外成为印象派的命名来源，也奠定了印象派「以视觉印象为核心，捕捉瞬间美」的创作理念。作品的色彩运用极具开创性，莫奈没有使用传统的黑色调，而是以色彩的对比表现明暗，让画面充满空气感与流动感，还原了人眼看到日出时的真实视觉体验。</p>
+        </div>
+        <div class="painter-info" data-painter="克劳德·莫奈">
+          <img src="https://picsum.photos/seed/monet/300/300" alt="克劳德·莫奈" class="painter-img">
+          <div class="painter-text">
+            <h3>克劳德·莫奈（1840-1926）</h3>
+            <p>法国印象派创始人之一，被誉为「印象派之父」，一生坚持「户外写生」，以自然、光影、色彩为创作核心，是印象派中最具代表性的艺术家。</p>
+            <p>艺术风格：摒弃传统调色板的黑色与棕色，以纯色彩的混合表现光影变化；擅长描绘同一景物在不同时间、不同光影下的色彩差异，形成系列作品；笔触松散、短促，强调画面的「瞬间印象」与「空气感」。</p>
+            <p><strong>历史地位</strong>：打破了西方传统绘画的写实束缚，将绘画从「再现事物」推向「表达感受」，是西方艺术史从古典走向现代的关键人物；其光影与色彩的探索，影响了后印象派、抽象主义、野兽派等多个现代艺术流派。</p>
+            <p><strong>代表作品</strong>：《日出·印象》《睡莲》系列《干草堆》系列《鲁昂大教堂》系列</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 新印象派（点彩派）流派 -->
+    <section id="neoimpressionism">
+      <h2 class="genre-title">新印象派</h2>
+      <p class="genre-desc">19世纪80年代诞生于法国，印象派的分支，又称「点彩派」，以<strong>色彩光学原理为基础，纯色彩小点拼贴</strong>为核心技法，摒弃混合调色，通过人眼视觉混合形成色彩效果，画面精准有序，是印象派与现代抽象艺术的过渡流派。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/georges/600/800" alt="大碗岛的星期日下午" class="painting-img">
+          <p class="painting-name">大碗岛的星期日下午</p>
+          <p class="painting-author">乔治·修拉</p>
+          <p class="painting-museum">美国 · 芝加哥艺术学院</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/paul/600/800" alt="安涅尔浴场" class="painting-img">
+          <p class="painting-name">安涅尔浴场</p>
+          <p class="painting-author">乔治·修拉</p>
+          <p class="painting-museum">法国 · 奥赛博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/camille/600/800" alt="游艇上的聚会" class="painting-img">
+          <p class="painting-name">游艇上的聚会</p>
+          <p class="painting-author">卡米耶·毕沙罗</p>
+          <p class="painting-museum">法国 · 卢浮宫博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/georges/1200/1600" alt="大碗岛的星期日下午" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/georges/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>大碗岛的星期日下午（A Sunday on La Grande Jatte）</span></p>
+          <p>画家：<span>乔治·修拉（Georges Seurat）</span></p>
+          <p>创作年份：<span>1884-1886年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>207×308cm</span></p>
+          <p>现存馆藏：<span>美国芝加哥艺术学院 · 新印象派展厅</span></p>
+          <p>艺术地位：<span>新印象派的巅峰之作，点彩技法的经典范本</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《大碗岛的星期日下午》是修拉耗时2年的代表作，完美诠释了新印象派的**点彩技法与色彩光学原理**。画面描绘了巴黎大碗岛的市民休闲场景，整幅作品由数百万个纯色彩小点拼贴而成，修拉摒弃了传统的混合调色，通过红与绿、蓝与橙、黄与紫的补色小点并置，利用人眼的视觉混合形成更明亮、更和谐的色彩效果，画面色彩鲜艳且富有层次。</p>
+          <p>作品构图严谨有序，人物以几何化的造型排列，动静结合，画面充满秩序感与装饰性；修拉还融入了象征主义的元素，人物的姿态与表情略显僵硬，营造出一种疏离的静谧感，与印象派的灵动形成鲜明对比。这幅作品是新印象派的集大成者，将科学与艺术完美融合，成为19世纪后期西方艺术的经典之作。</p>
+        </div>
+        <div class="painter-info" data-painter="乔治·修拉">
+          <img src="https://picsum.photos/seed/seurat/300/300" alt="乔治·修拉" class="painter-img">
+          <div class="painter-text">
+            <h3>乔治·修拉（1859-1891）</h3>
+            <p>法国新印象派（点彩派）创始人，毕业于巴黎美术学院，擅长将色彩光学原理与绘画结合，以点彩技法著称，是19世纪后期西方艺术史上极具创新的画家，英年早逝仅31岁。</p>
+            <p>艺术风格：以「点彩技法」为核心，纯色彩小点并置实现视觉混合；遵循色彩光学原理，使用补色对比营造色彩层次；构图严谨几何化，画面充满秩序感与装饰性；融合印象派的光影与象征主义的静谧。</p>
+            <p><strong>历史地位</strong>：新印象派的创立者，将科学色彩学引入绘画，实现了艺术与科学的完美融合；点彩技法影响了后世的野兽派、立体主义，是印象派向现代抽象艺术过渡的关键人物；其短暂的一生留下的作品，成为西方现代艺术的重要遗产。</p>
+            <p><strong>代表作品</strong>：《大碗岛的星期日下午》《安涅尔浴场》《马戏团》《喧闹的海滨》</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. 后印象派流派 -->
+    <section id="post-impressionism">
+      <h2 class="genre-title">后印象派</h2>
+      <p class="genre-desc">19世纪80-90年代继印象派之后的艺术流派，继承印象派对色彩的探索，却突破其「纯视觉印象」的局限，强调<strong>主观情感表达</strong>与<strong>画面形式探索</strong>，将色彩、笔触作为表达情绪的工具，为现代艺术奠定了形式基础。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/starrynight/600/800" alt="星月夜" class="painting-img">
+          <p>作品名：星月夜</p>
+          <p>画家：文森特·梵高</p>
+          <p>馆藏：美国 · 大都会艺术博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/thinker/600/800" alt="思想者" class="painting-img">
+          <p>作品名：静物：苹果与橘子</p>
+          <p>画家：保罗·塞尚</p>
+          <p>馆藏：法国 · 奥赛博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/tahiti/600/800" alt="塔希提少女" class="painting-img">
+          <p>作品名：塔希提少女</p>
+          <p>画家：保罗·高更</p>
+          <p>馆藏：法国 · 奥赛博物馆</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/starrynight/1200/1600" alt="星月夜" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/starrynight/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>星月夜（The Starry Night）</span></p>
+          <p>画家：<span>文森特·梵高（Vincent van Gogh）</span></p>
+          <p>创作年份：<span>1889年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>73.7×92.1cm</span></p>
+          <p>现存馆藏：<span>美国纽约大都会艺术博物馆 · 现代艺术展厅</span></p>
+          <p>艺术地位：<span>后印象派代表作，西方现代艺术的经典符号</span></p>
+        </div>
+        <div class="detail-interpret">
+          <h3 class="detail-subtitle">作品解读</h3>
+          <p>《星月夜》是梵高在圣雷米精神病院创作的作品，描绘了他从病房窗口看到的夜空，画面完全突破了印象派的「客观光影」，以<strong>主观的色彩与笔触</strong>表达内心的情绪。夜空中的星星与月亮被描绘成旋转的火球，天空以扭曲、流动的蓝绿色笔触勾勒，像汹涌的海浪，下方的村庄宁静质朴，柏树如燃烧的火炬向上延伸，形成「动与静」「现实与幻想」的强烈对比。</p>
+          <p>梵高使用高饱和的蓝、紫、黄对比，以厚重的「厚涂法」（Impasto）绘制画面，笔触的肌理感成为表达情绪的工具——旋转的笔触传递出他内心的躁动与对生命的渴望，而村庄的暖黄色调则流露着他对平静生活的向往。这幅作品没有遵循现实的光影与比例，却以极致的主观表达，让观众感受到强烈的情感共鸣，成为后印象派「情感高于形式」的核心代表作。</p>
+        </div>
+        <div class="painter-info" data-painter="文森特·梵高">
+          <img src="https://picsum.photos/seed/vangogh/300/300" alt="文森特·梵高" class="painter-img">
+          <div class="painter-text">
+            <h3>文森特·梵高（1853-1890）</h3>
+            <p>荷兰后印象派画家，一生坎坷，仅在世时卖出1幅作品，却成为西方现代艺术史上最具影响力的艺术家之一，其作品以强烈的主观情感、高饱和的色彩、厚重的笔触著称。</p>
+            <p>艺术风格：突破印象派的客观色彩，使用主观化的高饱和色彩对比；擅长「厚涂法」，笔触粗犷、厚重，具有强烈的肌理感；画面充满动感与情绪，将色彩和笔触作为表达内心的直接工具。</p>
+            <p><strong>历史地位</strong>：后印象派的核心代表，开启了西方现代艺术的「表现主义」先河，让绘画从「描绘现实」转向「表达自我」，影响了野兽派、表现主义、抽象主义等多个现代艺术流派；其作品成为西方艺术史上最具价值的艺术遗产之一。</p>
+            <p><strong>代表作品</strong>：《星月夜》《向日葵》系列《麦田群鸦》《自画像》系列</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. 野兽派流派 -->
+    <section id="fauvism">
+      <h2 class="genre-title">野兽派</h2>
+      <p class="genre-desc">20世纪初诞生于法国，是西方现代艺术史上第一个真正意义的现代主义流派，以<strong>强烈的主观色彩、简化的造型、粗犷的笔触</strong>为核心，摒弃色彩的写实性，将色彩作为表达情绪的独立工具，画面充满视觉冲击力，被评论家嘲讽为「野兽」而得名。</p>
+      <div class="painting-list">
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/henri/600/800" alt="戴帽子的女人" class="painting-img">
+          <p>作品名：戴帽子的女人</p>
+          <p>画家：亨利·马蒂斯</p>
+          <p>馆藏：美国 · 旧金山现代艺术博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/luxe/600/800" alt="奢华、宁静与愉悦" class="painting-img">
+          <p>作品名：奢华、宁静与愉悦</p>
+          <p>画家：亨利·马蒂斯</p>
+          <p>馆藏：法国 · 奥赛博物馆</p>
+        </div>
+        <div class="painting-card">
+          <img src="https://picsum.photos/seed/andre/600/800" alt="查灵十字桥" class="painting-img">
+          <p>作品名：查灵十字桥</p>
+          <p>画家：安德烈·德兰</p>
+          <p>馆藏：法国 · 蓬皮杜艺术中心</p>
+        </div>
+      </div>
+      <div class="painting-detail">
+        <img src="https://picsum.photos/seed/henri/1200/1600" alt="戴帽子的女人" class="detail-img painting-modal-img" data-img="https://picsum.photos/seed/henri/1200/1600">
+        <div class="detail-info">
+          <p>作品名：<span>戴帽子的女人（The Woman with a Hat）</span></p>
+          <p>画家：<span>亨利·马蒂斯（Henri Matisse）</span></p>
+          <p>创作年份：<span>1905年</span></p>
+          <p>材质：<span>布面油画</span></p>
+          <p>尺寸：<span>80.6×59.7cm</span></p>
+          <p>现存馆藏：<span>美国旧金山现代艺术博物馆 · 野兽派展厅</span></p>
+          <p>艺术地位：<span>野兽派的开山之作，现代主义色彩革命的标志</span></p>
+        </div>
+        <div class="detail-interpret">
